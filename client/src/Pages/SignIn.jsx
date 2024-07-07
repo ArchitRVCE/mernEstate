@@ -40,7 +40,7 @@ function SignIn() {
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <input type='email' className='border p-3 rounded-lg' placeholder='Email' id='email' onChange={handleChange}/>
         <input type='password' className='border p-3 rounded -lg' placeholder='Password' id='password' onChange={handleChange}/>
-        <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>{loading ? 'Loading': 'Sign Up'}</button>
+        <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>{loading ? 'Loading': 'Sign Ip'}</button>
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Don't have a account?</p>
