@@ -15,7 +15,7 @@ const OAuth = () => {
             const auth = getAuth(app); //app from firebase setup
 
             const result = await signInWithPopup(auth,provider); //data from sign in user like email photoURL, full name
-            console.log(result);
+            //console.log(result);
             const res = await fetch("/api/auth/google",{
                 method: "POST",
                 headers:{
