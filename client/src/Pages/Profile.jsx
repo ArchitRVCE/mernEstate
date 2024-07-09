@@ -1,7 +1,8 @@
 import React,{useEffect, useRef, useState} from 'react'
-import {useSelector} from 'react-redux'
 import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/storage'
 import {app} from '../firebase.js'
+import { updateFailed,updateStart,updateSuccess } from '../features/User/UserSlice.js'
+import { useSelector,useDispatch } from 'react-redux'
 
 function Profile() {
   const {currentUser} = useSelector(state=>state.user);
@@ -10,6 +11,7 @@ function Profile() {
   const [filePrec,setFilePerc] = useState(0);
   const [fileUploadError,setFileUploadError] = useState(false);
   const [formData,setFormData] = useState({});
+  const dispatch = useDispatch()
   useEffect(()=>{
     if(file)  handleFileUpload(file);
   },[file])
@@ -40,12 +42,31 @@ function Profile() {
   }
   const handleUpdate = async(e) => {
     e.preventDefault();
-    const res = await fetch("api/auth")
+    try {
+      dispatch(updateStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`,{
+        method: "POST",
+        //credentials: 'include',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if(data.success===false){
+        dispatch(updateFailed(data.message))
+        return;
+      }
+      dispatch(updateSuccess(data));
+    } catch (error) {
+        dispatch(updateFailed(error.message))
+    }
+
   }
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={handleUpdate} className='flex flex-col gap-4'>
         <input onChange={(e)=>setFile(e.target.files[0])} ref={fileRef} hidden type="file" accept='image/*'/>
         <img onClick={()=>{fileRef.current.click()}} src={formData.avatar || currentUser.avatar} alt='profile' className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'/>
         <p className='text-sm self-center'>
@@ -61,10 +82,10 @@ function Profile() {
             ''
           )}
         </p>
-        <input type="text" placeholder='Username' id="username" className='border p-3 rounder-lg' onChange={handleFormData}/>
-        <input type="email" placeholder='Email' id="email" className='border p-3 rounder-lg' onChange={handleFormData}/>
+        <input type="text" placeholder='Username' id="username" defaultValue={currentUser.username} className='border p-3 rounder-lg' onChange={handleFormData}/>
+        <input type="email" placeholder='Email' id="email" defaultValue={currentUser.email} className='border p-3 rounder-lg' onChange={handleFormData}/>
         <input type="password" placeholder='Password' id="password" className='border p-3 rounder-lg' onChange={handleFormData}/>
-        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80' onClick={handleUpdate}>Update</button>
+        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80'>Update</button>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer'>Delete Account</span>

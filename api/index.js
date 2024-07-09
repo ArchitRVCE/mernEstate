@@ -4,15 +4,18 @@ import cookieparser from 'cookie-parser'
 import dotenv from 'dotenv'
 import userRoute from './routes/user.route.js'
 import authRoute from './routes/auth.route.js'
+import cors from 'cors'
 dotenv.config();
-
-const route = express.Router();
-
 
 mongoose.connect(process.env.MONGO)
     .then(response=>console.log('Connected to DB!'))
     .catch(err=>console.log('Connection Failed'))
-const app = express()
+const app = express();
+
+// app.use(cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true
+// }));
 app.use(express.json());
 app.use(cookieparser());
 app.use("/api/user",userRoute);
