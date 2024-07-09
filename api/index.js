@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose, { mongo } from 'mongoose'
+import cookieparser from 'cookie-parser'
 import dotenv from 'dotenv'
 import userRoute from './routes/user.route.js'
 import authRoute from './routes/auth.route.js'
@@ -13,6 +14,7 @@ mongoose.connect(process.env.MONGO)
     .catch(err=>console.log('Connection Failed'))
 const app = express()
 app.use(express.json());
+app.use(cookieparser());
 app.use("/api/user",userRoute);
 app.use("/api/auth",authRoute);
 

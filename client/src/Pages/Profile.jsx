@@ -13,6 +13,9 @@ function Profile() {
   useEffect(()=>{
     if(file)  handleFileUpload(file);
   },[file])
+  const handleFormData = (e) =>{
+    setFormData({...formData,[e.target.id]:e.target.value});
+  }
   const handleFileUpload = (file) =>{
       const storage = getStorage(app);
       const fileName = new Date().getTime() + file.name;
@@ -35,7 +38,10 @@ function Profile() {
           );
         });
   }
-
+  const handleUpdate = async(e) => {
+    e.preventDefault();
+    const res = await fetch("api/auth")
+  }
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -55,10 +61,10 @@ function Profile() {
             ''
           )}
         </p>
-        <input type="text" placeholder='Username' id="username" className='border p-3 rounder-lg'/>
-        <input type="email" placeholder='Email' id="email" className='border p-3 rounder-lg'/>
-        <input type="password" placeholder='Password' id="password" className='border p-3 rounder-lg'/>
-        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80'>Update</button>
+        <input type="text" placeholder='Username' id="username" className='border p-3 rounder-lg' onChange={handleFormData}/>
+        <input type="email" placeholder='Email' id="email" className='border p-3 rounder-lg' onChange={handleFormData}/>
+        <input type="password" placeholder='Password' id="password" className='border p-3 rounder-lg' onChange={handleFormData}/>
+        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80' onClick={handleUpdate}>Update</button>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer'>Delete Account</span>
