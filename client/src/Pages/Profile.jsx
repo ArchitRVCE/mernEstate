@@ -1,17 +1,19 @@
 import React,{useEffect, useRef, useState} from 'react'
 import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/storage'
 import {app} from '../firebase.js'
-import { updateFailed,updateStart,updateSuccess } from '../features/User/UserSlice.js'
+import { deleteFailed, deleteStart, deleteSuccess, updateFailed,updateStart,updateSuccess } from '../features/User/UserSlice.js'
 import { useSelector,useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 function Profile() {
+  const navigate = useNavigate();
   const {currentUser,loading,error} = useSelector(state=>state.user);
   const fileRef = useRef(null);
   const [file,setFile] = useState(undefined);
   const [filePrec,setFilePerc] = useState(0);
   const [fileUploadError,setFileUploadError] = useState(false);
   const [formData,setFormData] = useState({});
-  const [updateSuccess,setupdateSucccess] = useState(false);
+  const [updateSuccessState,setupdateSucccess] = useState(false);
   const dispatch = useDispatch()
   useEffect(()=>{
     if(file)  handleFileUpload(file);
@@ -40,6 +42,23 @@ function Profile() {
             setFormData({...formData,avatar:downloadURL})
           );
         });
+  }
+  const handleDeleteAccount = async() =>{
+    try {
+      dispatch(deleteStart());
+      const data = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method:'DELETE'
+      });
+      const res = await data.json();
+      if(res.success===false){
+        dispatch(deleteFailed(res.message));
+        return;
+      }
+      dispatch(deleteSuccess());
+      navigate("/sign-in");
+    } catch (error) {
+      dispatch(deleteFailed(error.message))
+    }
   }
   const handleUpdate = async(e) => {
     e.preventDefault();
@@ -90,11 +109,11 @@ function Profile() {
         <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80'>{loading?'Loading...':'Update'}</button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
+        <span className='text-red-700 cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>
         <span className='text-red-700 cursor-pointer'>Sign Out</span>
       </div>
       <p className='text-red-600 mt-5 text-center'>{error?error:''}</p>
-      <p className='text-green-600 mt-5 text-center'>{updateSuccess?'Updated Succefully':''}</p>
+      <p className='text-green-600 mt-5 text-center'>{updateSuccessState?'Updated Succefully':''}</p>
     </div>
   )
 }
