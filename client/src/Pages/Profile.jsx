@@ -3,7 +3,7 @@ import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/sto
 import {app} from '../firebase.js'
 import { deleteFailed, deleteStart, deleteSuccess, signoutFailed, signoutStart, signoutSuccess, updateFailed,updateStart,updateSuccess } from '../features/User/UserSlice.js'
 import { useSelector,useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
 
 function Profile() {
   const navigate = useNavigate();
@@ -122,6 +122,7 @@ function Profile() {
         <input type="email" placeholder='Email' id="email" defaultValue={currentUser.email} className='border p-3 rounder-lg' onChange={handleFormData}/>
         <input type="password" placeholder='Password' id="password" className='border p-3 rounder-lg' onChange={handleFormData}/>
         <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-80 disabled:opacity-80'>{loading?'Loading...':'Update'}</button>
+        <Link to="/create-listing" className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'>Create Listing</Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>

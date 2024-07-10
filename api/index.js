@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import userRoute from './routes/user.route.js'
 import authRoute from './routes/auth.route.js'
 import cors from 'cors'
-import { listingRoute } from './routes/listing.route.js'
+import listingRoute from './routes/listing.route.js'
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
