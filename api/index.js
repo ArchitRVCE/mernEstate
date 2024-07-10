@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import userRoute from './routes/user.route.js'
 import authRoute from './routes/auth.route.js'
 import cors from 'cors'
+import { listingRoute } from './routes/listing.route.js'
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cookieparser());
 app.use("/api/user",userRoute);
 app.use("/api/auth",authRoute);
+app.use("/api/listing",listingRoute);
 
 //middle ware for error handling
 app.use((err,req,res,next)=>{
