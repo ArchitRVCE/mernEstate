@@ -39,6 +39,8 @@ export default function CreateListing() {
                 setFormData({...formData,imageUrls: formData.imageUrls.concat(url)})
                 setImageUploadError(false);
                 setUploading(false);
+                setLoading(false);
+                setErrors(false);
             }).catch(error=>{
                 setImageUploadError("Image upload failed (2MB max per image)");
                 setUploading(false);
@@ -95,7 +97,7 @@ export default function CreateListing() {
             setLoading(true);
             if(!files.length) return setErrors('You must upload atleast one image')
             if(+formData.regularPrice < +formData.discountPrice) return setErrors('Discount price must be lower than regular price!')
-            const res = await fetch('/api/listing/create',{
+            const res = await fetch('/api/userListing/create',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
