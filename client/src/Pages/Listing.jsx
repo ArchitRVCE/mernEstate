@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import { useParams } from 'react-router-dom'
+import {useSelector} from 'react-redux'
 //swiper imports
 import {Swiper,SwiperSlide} from 'swiper/react'
 import SwiperCore from 'swiper'
@@ -15,16 +16,19 @@ import {
   FaParking,
   FaShare,
 } from 'react-icons/fa'
+import Contact from '../Components/Contact'
 
 function Listing() {
     SwiperCore.use([Navigation]);//initialize swiper navigation
     const params = useParams();
     const [listing,setListing] = useState(null);
     const {listingId} =  params;
+    const {currentUser} = useSelector(state=>state.user);
     //loading and error for full page while fetcing data
     const [loading,setLoading] = useState(false)
     const [error,setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [contact,setContact] = useState(false);
     useEffect(()=>{
         try {
             setLoading(true);
@@ -124,6 +128,14 @@ function Listing() {
                                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
                             </li>
                         </ul>
+                        {
+                            currentUser && listing.userRef !== currentUser._id && !contact && (
+                                <button onClick={()=>setContact(true)} className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'>Contact LandLord</button>
+                            )
+                        }
+                        {
+                            contact && <Contact listing={listing}/>
+                        }
                     </div>
             </div>
         )}
