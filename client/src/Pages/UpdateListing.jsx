@@ -111,7 +111,6 @@ function UpdateListing() {
             
             setErrors(false);
             setLoading(true);
-            if(!files.length) return setErrors('You must upload atleast one image')
             if(+formData.regularPrice < +formData.discountPrice) return setErrors('Discount price must be lower than regular price!')
             const res = await fetch(`/api/userListing/update/${params.listingId}`,{
                 method:'POST',
