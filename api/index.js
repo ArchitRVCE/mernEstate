@@ -5,12 +5,16 @@ import dotenv from 'dotenv'
 import userRoute from './routes/user.route.js'
 import authRoute from './routes/auth.route.js'
 import cors from 'cors'
+import path from 'path'
+
 import listingRoute from './routes/listing.route.js'
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
     .then(response=>console.log('Connected to DB!'))
     .catch(err=>console.log('Connection Failed'))
+
+const __dirname = path.resolve();
 const app = express();
 
 // app.use(cors({
@@ -23,6 +27,10 @@ app.use("/api/user",userRoute);
 app.use("/api/auth",authRoute);
 app.use("/api/userListing",listingRoute);
 
+app.use(express.static(path.join(__dirname,'/client/dist')));
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'client','dist','index.html'));
+})
 //middle ware for error handling
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
