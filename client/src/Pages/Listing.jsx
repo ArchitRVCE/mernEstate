@@ -43,8 +43,7 @@ function Listing() {
                 }
                 setListing(res);
                 setError(false);
-                setLoading(false)
-                console.log(listing)
+                setLoading(false);
             }
             fetchListing();
         } catch (error) {
@@ -98,7 +97,7 @@ function Listing() {
                             </p>
                             {listing.offer && (
                                 <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                                ₹{+listing.regularPrice - +listing.discountPrice} OFF
+                                ₹{(listing.regularPrice - listing.discountPrice).toLocaleString('en-IN')} OFF
                                 </p>
                             )}
                         </div>
